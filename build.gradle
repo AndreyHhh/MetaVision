@@ -1,0 +1,77 @@
+plugins {
+  id 'java'
+  id 'application'
+  id 'org.openjfx.javafxplugin' version '0.0.13'
+  id 'org.beryx.runtime' version '1.13.1'
+}
+
+group = 'com.lycurg'
+version = '1.0'
+
+repositories {
+  mavenCentral()
+}
+
+java {
+  sourceCompatibility = '17'
+  targetCompatibility = '17'
+}
+
+application {
+  mainClass = 'com.lycurg.metavisionfor1c.Application_MetaVision'
+}
+
+javafx {
+  version = '17.0.6'
+  modules = ['javafx.controls', 'javafx.fxml', 'javafx.swing', 'javafx.graphics', 'javafx.base']
+}
+
+dependencies {
+  implementation 'org.xerial:sqlite-jdbc:3.45.3.0'
+  implementation 'org.fxmisc.richtext:richtextfx:0.11.0'
+  implementation 'org.json:json:20230227'
+  implementation 'com.brunomnsilva:smartgraph:2.3.0'
+  implementation 'com.dlsc.formsfx:formsfx-core:11.6.0'
+  implementation 'org.apache.pdfbox:pdfbox:2.0.29'
+  implementation 'commons-logging:commons-logging:1.2'
+  implementation 'commons-io:commons-io:2.11.0'
+  implementation 'org.apache.commons:commons-exec:1.4.0'
+
+}
+
+tasks.named('compileJava') {
+  options.encoding = 'UTF-8'
+  options.compilerArgs += ['--add-exports', 'javafx.graphics/com.sun.javafx.sg.prism=ALL-UNNAMED']
+}
+
+jar {
+  manifest {
+    attributes 'Main-Class': 'com.lycurg.metavisionfor1c.Application_MetaVision'
+  }
+  from {
+    configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+  }
+  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+runtime {
+  options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
+
+  modules = [
+          'java.base', 'java.desktop', 'java.logging', 'java.sql',
+          'java.xml', 'java.naming', 'java.management', 'java.net.http',
+          'javafx.controls', 'javafx.fxml', 'javafx.swing',
+          'javafx.graphics', 'javafx.base',
+          'jdk.crypto.ec',        // ← HTTPS/TLS поддержка
+          'jdk.crypto.cryptoki'   // ← нативные крипто-провайдеры
+  ]
+
+  launcher {
+    noConsole = true
+  }
+
+  def platform = System.getProperty('os.name').toLowerCase().contains('win') ? 'windows' : 'linux'
+  imageZip = project.file("${buildDir}/MetaVision-${platform}.zip")
+}
+
+//./gradlew runtimeZip       ->/home/andrey/IdeaProjects/MetaVision for 1C/build/MetaVision-linux.zip

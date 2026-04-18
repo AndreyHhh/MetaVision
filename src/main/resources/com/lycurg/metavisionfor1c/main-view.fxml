@@ -1,0 +1,463 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.fxmisc.richtext.CodeArea?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.lycurg.metavisionfor1c.DependencyController"
+      spacing="10"
+      stylesheets="@/1c-syntax.css, @/metavision-ui.css">
+
+  <padding>
+    <Insets top="10" right="10" bottom="10" left="10"/>
+  </padding>
+
+  <!-- Панель выбора папки конфигурации -->
+  <HBox styleClass="panel panel-info" spacing="10" alignment="CENTER_LEFT">
+    <Label text="Путь к конфигурации:" styleClass="subheader"/>
+    <TextField fx:id="configPathField" promptText="Выберите папку конфигурации..."
+               HBox.hgrow="ALWAYS" editable="false" styleClass="text-field"/>
+    <Button fx:id="configPathButton" text="🗂️ Выбрать папку" onAction="#changeConfigDirectory" styleClass="btn btn-success"/>
+  </HBox>
+
+  <!-- Кнопки работы с БД -->
+  <HBox spacing="10" alignment="CENTER_LEFT">
+    <Button fx:id="loadButton" text="💿 Загрузка данных конфигурации" onAction="#onSaveToDb" styleClass="btn btn-success"/>
+    <ProgressBar fx:id="loadProgress" prefWidth="200" visible="false"/>
+    <Label fx:id="loadStatus" text="" visible="false" styleClass="caption"/>
+    <Region HBox.hgrow="ALWAYS"/>
+    <Button text="✉️ Обратная связь" onAction="#showFeedbackDialog" styleClass="btn btn-warning"/>
+    <Button text="ℹ️ О приложении" onAction="#showAboutDialog" styleClass="btn btn-info"/>
+  </HBox>
+
+  <!-- ГЛАВНЫЙ SPLITPANE - вкладки сверху, сообщения снизу -->
+  <SplitPane fx:id="messagesSplitPane" orientation="VERTICAL" VBox.vgrow="ALWAYS" dividerPositions="0.8">
+
+    <!-- ВСЕ ВКЛАДКИ -->
+    <TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE" styleClass="shadow-sm">
+
+      <!-- ==================== ВКЛАДКА 1: ДЕРЕВО ФУНКЦИЙ ==================== -->
+      <Tab text="📊 Дерево функций">
+        <VBox spacing="10">
+          <padding><Insets bottom="10" left="10" right="10" top="10"/></padding>
+
+          <!-- ШАПКА С КНОПКОЙ HELP -->
+          <HBox spacing="10" alignment="CENTER_LEFT">
+            <VBox spacing="5" HBox.hgrow="ALWAYS">
+              <Label text="📊 Анализатор кода 1С" styleClass="header"/>
+              <Label text="Дерево всех объектов метаданных конфигурации, просмотр функций и их взаимосвязей"
+                     styleClass="caption"/>
+            </VBox>
+            <Button text="❓" onAction="#showHelpForAnalyzerTab" style="-fx-background-color: #17a2b8; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-padding: 5 12; -fx-background-radius: 4; -fx-cursor: hand;"/>
+          </HBox>
+
+          <SplitPane dividerPositions="0.25, 0.25, 0.5" VBox.vgrow="ALWAYS">
+
+            <!-- Левая панель -->
+            <VBox spacing="10">
+              <padding><Insets bottom="10" left="10" right="10" top="10"/></padding>
+              <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Поиск:" styleClass="subheader"/>
+                <TextField fx:id="searchField" promptText="Введите класс или метод..." HBox.hgrow="ALWAYS" styleClass="text-field"/>
+                <Button text="🔍" onAction="#onSearchClick" styleClass="btn btn-primary"/>
+                <Button fx:id="clearSearchButton" text="🗑" onAction="#onClearSearch" styleClass="btn btn-danger btn-xs"/>
+              </HBox>
+              <HBox spacing="5" alignment="CENTER_LEFT">
+                <Button onAction="#expandAllTree" text="▼" styleClass="btn btn-success btn-icon"/>
+                <Button onAction="#collapseAllTree" text="▲" styleClass="btn btn-warning btn-icon"/>
+              </HBox>
+              <TreeView fx:id="classTree" styleClass="tree-view shadow-sm" VBox.vgrow="ALWAYS"/>
+            </VBox>
+
+            <!-- Средняя панель (только функции объекта) -->
+            <VBox spacing="10">
+              <padding><Insets bottom="10" left="10" right="10" top="10"/></padding>
+              <Label text="Функции объекта:" styleClass="header"/>
+              <TableView fx:id="functionsTable" styleClass="table-view shadow-sm" VBox.vgrow="ALWAYS">
+                <columns>
+                  <TableColumn text="" prefWidth="60"/>
+                  <TableColumn text=" " prefWidth="500"/>
+                </columns>
+              </TableView>
+              <Label fx:id="functionsCountLabel" text="Функций: 0" styleClass="subheader"/>
+            </VBox>
+
+            <!-- Правая панель -->
+            <SplitPane orientation="VERTICAL" dividerPositions="0.7">
+              <VBox spacing="10">
+                <padding><Insets bottom="10" left="10" right="10" top="10"/></padding>
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                  <Label text="Структура функции:" styleClass="header"/>
+                  <Label fx:id="selectedFunctionLabel" text="Выберите функцию" styleClass="text-info"/>
+                </HBox>
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                  <Label text="Стиль графа:" styleClass="subheader"/>
+                  <ComboBox fx:id="graphStyleComboBox" prefWidth="150"/>
+                  <Region HBox.hgrow="ALWAYS"/>
+                  <Button fx:id="backButton" text="←" onAction="#goBackInGraphHistory" visible="false" styleClass="btn btn-info btn-xs"/>
+                  <Button text="🗄️ Сохранить в PDF" onAction="#saveGraphToPdfLandscape" styleClass="btn btn-success"/>
+                  <Button text="↔️Сбросить масштаб" onAction="#resetGraphZoom" styleClass="btn btn-secondary"/>
+                </HBox>
+                <VBox fx:id="elementGraphContainer" styleClass="panel shadow-sm" VBox.vgrow="ALWAYS"/>
+              </VBox>
+              <VBox spacing="10">
+                <padding><Insets bottom="10" left="10" right="10" top="10"/></padding>
+                <Label text="Модуль функции:" styleClass="header"/>
+                <!-- ПОЛОСА ПОИСКА НАД МОДУЛЕМ -->
+                <HBox spacing="5" alignment="CENTER_LEFT">
+                  <TextField fx:id="codeAnalyzerSearchField" promptText="Поиск в модуле..." HBox.hgrow="ALWAYS" styleClass="text-field"/>
+                  <Button fx:id="codeAnalyzerSearchPrevBtn" text="▲" onAction="#onCodeAnalyzerSearchPrev" styleClass="btn btn-secondary"/>
+                  <Button fx:id="codeAnalyzerSearchNextBtn" text="▼" onAction="#onCodeAnalyzerSearchNext" styleClass="btn btn-secondary"/>
+                  <Label fx:id="codeAnalyzerSearchCounter" text="0/0" styleClass="caption"/>
+                </HBox>
+                <CodeArea fx:id="moduleCodeArea" styleClass="text-area shadow-sm" VBox.vgrow="ALWAYS"/>
+              </VBox>
+            </SplitPane>
+          </SplitPane>
+        </VBox>
+      </Tab>
+
+      <!-- ==================== ВКЛАДКА 2: РАБОТА С МОДУЛЕМ ==================== -->
+      <Tab text="🛠️ Работа с модулем">
+        <VBox spacing="10">
+          <padding><Insets bottom="10" left="10" right="10" top="10"/></padding>
+
+          <!-- ШАПКА С КНОПКОЙ HELP -->
+          <HBox spacing="10" alignment="CENTER_LEFT">
+            <VBox spacing="5" HBox.hgrow="ALWAYS">
+              <Label text="🛠️ Работа с модулем 1С" styleClass="header"/>
+              <Label text="Инструменты для преобразования запросов, проверки кода и автоматического выравнивания"
+                     styleClass="caption"/>
+            </VBox>
+            <Button text="❓" onAction="#showHelpForWorkbenchTab" style="-fx-background-color: #17a2b8; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-padding: 5 12; -fx-background-radius: 4; -fx-cursor: hand;"/>
+          </HBox>
+
+          <!-- Панель инструментов: 5 кнопок в GridPane + кнопка Очистить справа -->
+          <HBox spacing="10" alignment="CENTER_LEFT">
+            <GridPane hgap="10" vgap="10" HBox.hgrow="ALWAYS">
+              <columnConstraints>
+                <ColumnConstraints percentWidth="20"/>
+                <ColumnConstraints percentWidth="20"/>
+                <ColumnConstraints percentWidth="20"/>
+                <ColumnConstraints percentWidth="20"/>
+                <ColumnConstraints percentWidth="20"/>
+              </columnConstraints>
+
+              <Button fx:id="queryToTextButton"  text="🛡️ Запрос → Текст" onAction="#queryToText" styleClass="btn btn-primary" GridPane.columnIndex="0" maxWidth="Infinity"/>
+              <Button  fx:id="textToQueryButton" text="⚔️ Текст → Запрос" onAction="#textToQuery" styleClass="btn btn-success" GridPane.columnIndex="1" maxWidth="Infinity"/>
+              <Button  fx:id="validateCodeButton" text="🔍 Проверить код" onAction="#validateCode" styleClass="btn btn-warning" GridPane.columnIndex="2" maxWidth="Infinity"/>
+              <Button  fx:id="checkSpellingButton" text="⏳ Орфография" onAction="#checkSpelling" styleClass="btn btn-info" GridPane.columnIndex="3" maxWidth="Infinity"/>
+              <Button fx:id="formatCodeButton" text="📈 Выравнивание" onAction="#format1CCode" styleClass="btn btn-info" GridPane.columnIndex="4" maxWidth="Infinity"/>
+            </GridPane>
+
+            <Button text="🗑" onAction="#clearWorkbench" styleClass="btn btn-danger"/>
+          </HBox>
+
+          <!-- Блок редактора кода -->
+          <VBox spacing="5" VBox.vgrow="ALWAYS">
+            <!-- ПОЛОСА ПОИСКА НАД МОДУЛЕМ -->
+            <HBox spacing="5" alignment="CENTER_LEFT">
+              <TextField fx:id="workbenchCodeSearchField" promptText="Поиск в модуле..." HBox.hgrow="ALWAYS" styleClass="text-field"/>
+              <Button fx:id="workbenchCodeSearchPrevBtn" text="▲" onAction="#onWorkbenchSearchPrev" styleClass="btn btn-secondary"/>
+              <Button fx:id="workbenchCodeSearchNextBtn" text="▼" onAction="#onWorkbenchSearchNext" styleClass="btn btn-secondary"/>
+              <Label fx:id="workbenchCodeSearchCounter" text="0/0" styleClass="caption"/>
+            </HBox>
+            <CodeArea fx:id="workbenchCodeArea" styleClass="text-area shadow-sm" VBox.vgrow="ALWAYS"/>
+          </VBox>
+
+          <!-- Статусная строка -->
+          <HBox>
+            <Label fx:id="workbenchStatusLabel" text="Готов" styleClass="caption"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="workbenchStatsLabel" text="Строк: 0 | Символов: 0" styleClass="caption"/>
+          </HBox>
+
+          <!-- Результаты проверки -->
+          <Label text="📋 Результаты проверки:" styleClass="subheader"/>
+          <TextArea fx:id="validationResultsArea" styleClass="text-area" editable="false" wrapText="true" prefHeight="150"/>
+        </VBox>
+      </Tab>
+
+
+
+      <!-- ==================== ВКЛАДКА 3: ПОИСК ПО МОДУЛЯМ ==================== -->
+      <Tab text="🔍 Поиск по модулям">
+        <VBox spacing="10">
+          <padding><Insets bottom="10" left="10" right="10" top="10"/></padding>
+
+          <!-- ШАПКА С КНОПКОЙ HELP -->
+          <HBox spacing="10" alignment="CENTER_LEFT">
+            <VBox spacing="5" HBox.hgrow="ALWAYS">
+              <Label text="🔍 Поиск текста в функциях и процедурах" styleClass="header"/>
+              <Label text="Найдите любой текст в коде: строки, вызовы методов, комментарии"
+                     styleClass="caption"/>
+            </VBox>
+            <Button text="❓" onAction="#showHelpForSearchTab" style="-fx-background-color: #17a2b8; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-padding: 5 12; -fx-background-radius: 4; -fx-cursor: hand;"/>
+          </HBox>
+
+          <!-- Строка поиска -->
+          <HBox spacing="10" alignment="CENTER_LEFT">
+            <Label text="Текст для поиска:" styleClass="subheader"/>
+            <TextField fx:id="functionTextSearchField" promptText="Например: НСтр(&quot;ru = &quot;) или Запрос.Выполнить()..." HBox.hgrow="ALWAYS" styleClass="text-field"/>
+            <Button text="🔍" onAction="#searchInFunctions" styleClass="btn btn-warning"/>
+            <Button onAction="#clearFunctionSearch" text="🗑" styleClass="btn btn-warning"/>
+          </HBox>
+
+          <!-- Информация о результатах -->
+          <HBox>
+            <Label fx:id="searchResultsCount" text="Найдено: 0" styleClass="text-info"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="searchTimeLabel" text="Время: -" styleClass="caption"/>
+          </HBox>
+
+          <!-- Таблица + блок кода в SplitPane -->
+          <SplitPane orientation="VERTICAL" dividerPositions="0.5" VBox.vgrow="ALWAYS">
+
+            <TableView fx:id="searchResultsTable" styleClass="table-view shadow-sm">
+              <columns>
+                <TableColumn text="" prefWidth="40"/>
+                <TableColumn text="Объект" prefWidth="240"/>
+                <TableColumn text="Тип" prefWidth="100"/>
+                <TableColumn text="Функция" prefWidth="250"/>
+                <TableColumn text="Контекст" prefWidth="800"/>
+              </columns>
+            </TableView>
+
+            <VBox spacing="5">
+              <HBox spacing="5" alignment="CENTER_LEFT">
+                <Label text="🔧 Текст функции:" styleClass="subheader"/>
+                <Region HBox.hgrow="ALWAYS"/>
+              </HBox>
+              <HBox spacing="5" alignment="CENTER_LEFT">
+                <TextField fx:id="searchTabCodeSearchField" promptText="Поиск в модуле..." HBox.hgrow="ALWAYS" styleClass="text-field"/>
+                <Button fx:id="searchTabCodeSearchPrevBtn" text="▲" onAction="#onSearchTabSearchPrev" styleClass="btn btn-secondary"/>
+                <Button fx:id="searchTabCodeSearchNextBtn" text="▼" onAction="#onSearchTabSearchNext" styleClass="btn btn-secondary"/>
+                <Label fx:id="searchTabCodeSearchCounter" text="0/0" styleClass="caption"/>
+              </HBox>
+              <CodeArea fx:id="functionDetailCodeArea" styleClass="text-area shadow-sm" VBox.vgrow="ALWAYS"/>
+            </VBox>
+
+          </SplitPane>
+
+        </VBox>
+      </Tab>
+
+      <!-- ==================== ВКЛАДКА 4: СКАНЕР ПРОБЛЕМ В КОДЕ ==================== -->
+      <Tab text="🔒 Сканер проблем в коде">
+        <VBox spacing="10">
+          <padding><Insets bottom="10" left="10" right="10" top="10"/></padding>
+
+          <!-- ШАПКА С КНОПКАМИ ЭКСПОРТ И HELP -->
+          <HBox spacing="10" alignment="CENTER_LEFT">
+            <VBox spacing="5" HBox.hgrow="ALWAYS">
+              <Label text="🔒 Сканер безопасности и производительности" styleClass="header"/>
+              <Label text="Поиск уязвимостей, проблем с производительностью и антипаттернов"
+                     styleClass="caption"/>
+            </VBox>
+            <Button text="📋 Экспорт таблицы" onAction="#exportSecurityReport" styleClass="btn btn-success"/>
+            <Button text="❓" onAction="#showHelpForSecurityTab" style="-fx-background-color: #17a2b8; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-padding: 5 12; -fx-background-radius: 4; -fx-cursor: hand;"/>
+          </HBox>
+
+          <!-- Кнопки сканирования (6 штук в GridPane) -->
+          <GridPane hgap="10" vgap="10">
+            <columnConstraints>
+              <ColumnConstraints percentWidth="16.66"/>
+              <ColumnConstraints percentWidth="16.66"/>
+              <ColumnConstraints percentWidth="16.66"/>
+              <ColumnConstraints percentWidth="16.66"/>
+              <ColumnConstraints percentWidth="16.66"/>
+              <ColumnConstraints percentWidth="16.66"/>
+            </columnConstraints>
+
+            <Button  fx:id="securityButton" text="🔒 Безопасность" onAction="#runSecurityScan" styleClass="btn" GridPane.columnIndex="0" maxWidth="Infinity"/>
+            <Button  fx:id="backgroundJobsButton"  text="⚡ Многопоточность" onAction="#scanBackgroundJobs" styleClass="btn" GridPane.columnIndex="1" maxWidth="Infinity"/>
+            <Button  fx:id="badNamesButton" text="👎 Плохие имена" onAction="#scanUnusedFunctions" styleClass="btn" GridPane.columnIndex="2" maxWidth="Infinity"/>
+            <Button fx:id="transactionsButton"  text="💣 Транзакции" onAction="#scanTransactions" styleClass="btn" GridPane.columnIndex="3" maxWidth="Infinity"/>
+            <Button fx:id="locksButton"  text="🪖 Блокировки" onAction="#scanLocks" styleClass="btn" GridPane.columnIndex="4" maxWidth="Infinity"/>
+            <Button  fx:id="loopQueriesButton" text="♾️ Точки в цикле" onAction="#scanLoopQueries" styleClass="btn" GridPane.columnIndex="5" maxWidth="Infinity"/>
+          </GridPane>
+
+          <!-- Прогресс бар -->
+          <ProgressBar fx:id="securityScanProgress" prefWidth="200" visible="false"/>
+
+          <!-- Статистика -->
+          <HBox spacing="20">
+            <Label fx:id="securityTotalLabel" text="Всего: 0" styleClass="subheader"/>
+            <Label fx:id="securityCriticalLabel" text="CRITICAL: 0" styleClass="text-danger"/>
+            <Label fx:id="securityHighLabel" text="HIGH: 0" styleClass="text-warning"/>
+            <Label fx:id="securityMediumLabel" text="MEDIUM: 0" styleClass="text-info"/>
+          </HBox>
+
+          <!-- Поле поиска по таблице -->
+          <HBox spacing="10" alignment="CENTER_LEFT">
+            <Label text="Поиск в таблице:" styleClass="subheader"/>
+            <TextField fx:id="securitySearchField" promptText="Поиск по функции или объекту..." HBox.hgrow="ALWAYS" styleClass="text-field"/>
+            <Button text="🔍" onAction="#filterSecurityTable" styleClass="btn btn-primary"/>
+            <Button text="🗑" onAction="#clearSecuritySearch" styleClass="btn btn-danger"/>
+          </HBox>
+
+          <!-- Основной контент: таблица и детали -->
+          <SplitPane dividerPositions="0.5" VBox.vgrow="ALWAYS">
+            <TableView fx:id="securityIssuesTable" styleClass="table-view shadow-sm">
+              <columns>
+                <TableColumn text="" prefWidth="40"/>
+                <TableColumn text="Уровень" prefWidth="80"/>
+                <TableColumn text="Тип" prefWidth="150"/>
+                <TableColumn text="Функция" prefWidth="200"/>
+                <TableColumn text="Объект" prefWidth="200"/>
+                <TableColumn text="Код" prefWidth="300"/>
+                <TableColumn text="Строка" prefWidth="60"/>
+              </columns>
+            </TableView>
+
+            <SplitPane orientation="VERTICAL" dividerPositions="0.4">
+              <VBox spacing="5">
+                <Label fx:id="selectedVulnerabilityLabel" text="Выберите проблему" styleClass="subheader"/>
+                <Label fx:id="vulnerabilityLocationLabel" text="" styleClass="caption"/>
+                <Label text="📌 Рекомендации:" styleClass="subheader"/>
+                <TextArea fx:id="securityDetailText" styleClass="text-area" editable="false" wrapText="true" VBox.vgrow="ALWAYS"/>
+              </VBox>
+              <VBox spacing="5">
+                <HBox spacing="5" alignment="CENTER_LEFT">
+                  <Label text="🔧 Текст функции:" styleClass="subheader"/>
+                  <Region HBox.hgrow="ALWAYS"/>
+                  <Label fx:id="functionInfoLabel" text="" styleClass="caption"/>
+                </HBox>
+                <!-- ПОЛОСА ПОИСКА НАД МОДУЛЕМ -->
+                <HBox spacing="5" alignment="CENTER_LEFT">
+                  <TextField fx:id="securityCodeSearchField" promptText="Поиск в модуле..." HBox.hgrow="ALWAYS" styleClass="text-field"/>
+                  <Button fx:id="securityCodeSearchPrevBtn" text="▲" styleClass="btn btn-secondary"/>
+                  <Button fx:id="securityCodeSearchNextBtn" text="▼" styleClass="btn btn-secondary"/>
+                  <Label fx:id="securityCodeSearchCounter" text="0/0" styleClass="caption"/>
+                </HBox>
+                <CodeArea fx:id="securityFunctionCodeArea" styleClass="text-area shadow-sm" VBox.vgrow="ALWAYS"/>
+              </VBox>
+            </SplitPane>
+          </SplitPane>
+        </VBox>
+      </Tab>
+      <!-- ==================== ВКЛАДКА 5: ПРОИЗВОДИТЕЛЬНОСТЬ ==================== -->
+      <Tab text="⚡ Производительность">
+        <VBox spacing="10">
+          <padding><Insets bottom="10" left="10" right="10" top="10"/></padding>
+
+          <!-- ШАПКА С КНОПКАМИ ЭКСПОРТ И HELP -->
+          <HBox spacing="10" alignment="CENTER_LEFT">
+            <VBox spacing="5" HBox.hgrow="ALWAYS">
+              <Label text="⚡ Анализатор производительности кода" styleClass="header"/>
+              <Label text="Поиск проблем с производительностью: запросы в циклах, вложенные элементы"
+                     styleClass="caption"/>
+            </VBox>
+            <Button text="📋 Экспорт таблицы" onAction="#exportPerformanceReport" styleClass="btn btn-success"/>
+            <Button text="❓" onAction="#showHelpForPerformanceTab" style="-fx-background-color: #17a2b8; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-padding: 5 12; -fx-background-radius: 4; -fx-cursor: hand;"/>
+          </HBox>
+
+          <VBox spacing="10">
+            <!-- Кнопки в горизонтальном ряду -->
+            <HBox spacing="10" alignment="CENTER_LEFT">
+              <Button fx:id="queryInLoopButton" text="🔍 Найти запросы в циклах" onAction="#runPerformanceScan" styleClass="btn btn-warning"/>
+              <Button fx:id="scanNestedElementsButton" text="🕸️ Найти блокировки/транзакции" onAction="#runNestedElementsScan" styleClass="btn btn-info"/>
+            </HBox>
+
+            <!-- ProgressBar с текстом статуса на отдельной строке -->
+            <HBox spacing="10" alignment="CENTER_LEFT">
+              <ProgressBar fx:id="performanceScanProgress" prefWidth="200" visible="false"/>
+              <Label fx:id="scanStatusLabel" text="" visible="false" styleClass="status-label"/>
+            </HBox>
+          </VBox>
+
+          <!-- Статистика -->
+          <HBox spacing="20">
+            <Label fx:id="performanceTotalLabel" text="Всего: 0" styleClass="subheader"/>
+            <Label fx:id="performanceCriticalLabel" text="CRITICAL: 0" styleClass="text-danger"/>
+            <Label fx:id="performanceHighLabel" text="HIGH: 0" styleClass="text-warning"/>
+            <Label fx:id="performanceMediumLabel" text="MEDIUM: 0" styleClass="text-info"/>
+          </HBox>
+
+          <!-- Поле поиска по таблице -->
+          <HBox spacing="10" alignment="CENTER_LEFT">
+            <Label text="Поиск в таблице:" styleClass="subheader"/>
+            <TextField fx:id="performanceSearchField" promptText="Поиск по функции или объекту..." HBox.hgrow="ALWAYS" styleClass="text-field"/>
+            <Button fx:id="performanceSearchButton" text="🔍" onAction="#filterPerformanceTable" styleClass="btn btn-primary"/>
+            <Button fx:id="performanceClearSearchButton" text="🗑" onAction="#clearPerformanceSearch" styleClass="btn btn-danger"/>
+          </HBox>
+
+          <!-- Основной контент -->
+          <SplitPane dividerPositions="0.5" VBox.vgrow="ALWAYS">
+            <SplitPane orientation="VERTICAL" dividerPositions="0.6">
+              <TableView fx:id="performanceIssuesTable" styleClass="table-view shadow-sm">
+                <columns>
+                  <TableColumn text="" prefWidth="40"/>
+                  <TableColumn text="Уровень" prefWidth="80"/>
+                  <TableColumn text="Тип" prefWidth="150"/>
+                  <TableColumn text="Функция" prefWidth="200"/>
+                  <TableColumn text="Объект" prefWidth="200"/>
+                  <TableColumn text="Цепочка" prefWidth="250"/>
+                  <TableColumn text="Глубина" prefWidth="70"/>
+                  <TableColumn text="Код" prefWidth="300"/>
+                  <TableColumn text="Строка" prefWidth="60"/>
+                </columns>
+              </TableView>
+              <VBox spacing="5">
+                <HBox>
+                  <Label text="Описание проблемы:" styleClass="subheader"/>
+                  <Region HBox.hgrow="ALWAYS"/>
+                  <Label fx:id="performanceLocationLabel" text="" styleClass="caption"/>
+                </HBox>
+                <TextArea fx:id="performanceDetailText" styleClass="text-area" editable="false" wrapText="true" VBox.vgrow="ALWAYS"/>
+              </VBox>
+            </SplitPane>
+            <SplitPane orientation="VERTICAL" dividerPositions="0.5">
+              <VBox spacing="5">
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                  <Label fx:id="selectedPerformanceLabel" text="Граф цепочки вызовов" styleClass="subheader"/>
+                  <Region HBox.hgrow="ALWAYS"/>
+                  <Button text="🗄️ Сохранить в PDF" onAction="#savePerformanceGraphToPdf" styleClass="btn btn-success"/>
+                  <Button fx:id="resetPerformanceGraphButton" text="↔️Сбросить масштаб" onAction="#resetPerformanceGraphZoom" styleClass="btn btn-secondary"/>
+                </HBox>
+                <VBox fx:id="performanceGraphContainer" styleClass="panel shadow-sm" VBox.vgrow="ALWAYS"/>
+              </VBox>
+              <VBox spacing="5">
+                <HBox spacing="5" alignment="CENTER_LEFT">
+                  <Label text="Текст функции:" styleClass="subheader"/>
+                  <Region HBox.hgrow="ALWAYS"/>
+                  <Label fx:id="performanceFunctionInfoLabel" text="" styleClass="caption"/>
+                </HBox>
+                <!-- ПОЛОСА ПОИСКА НАД МОДУЛЕМ -->
+                <HBox spacing="5" alignment="CENTER_LEFT">
+                  <TextField fx:id="performanceCodeSearchField" promptText="Поиск в модуле..." HBox.hgrow="ALWAYS" styleClass="text-field"/>
+                  <Button fx:id="performanceCodeSearchPrevBtn" text="▲" styleClass="btn btn-secondary"/>
+                  <Button fx:id="performanceCodeSearchNextBtn" text="▼" styleClass="btn btn-secondary"/>
+                  <Label fx:id="performanceCodeSearchCounter" text="0/0" styleClass="caption"/>
+                </HBox>
+                <CodeArea fx:id="performanceFunctionCodeArea" styleClass="text-area shadow-sm" VBox.vgrow="ALWAYS"/>
+              </VBox>
+            </SplitPane>
+          </SplitPane>
+        </VBox>
+      </Tab>
+      <!-- ==================== ВКЛАДКА 6: СТАТИСТИКА ==================== -->
+      <Tab text="📈 Статистика">
+        <VBox alignment="CENTER" spacing="20">
+          <padding><Insets top="50" right="50" bottom="50" left="50"/></padding>
+          <Label text="Вкладка в разработке" styleClass="caption"/>
+        </VBox>
+      </Tab>
+
+    </TabPane>
+
+    <!-- НИЖНЯЯ ПАНЕЛЬ: СООБЩЕНИЯ (можно тянуть) -->
+    <VBox spacing="5" styleClass="panel shadow-sm" minHeight="80">
+      <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="📝 Сообщения" styleClass="header"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="✖️ Очистить" onAction="#clearMessages" styleClass="btn btn-secondary btn-xs"/>
+      </HBox>
+      <TextArea fx:id="messagesArea" styleClass="text-area" editable="false" wrapText="true" VBox.vgrow="ALWAYS"/>
+    </VBox>
+
+  </SplitPane>
+
+</VBox>

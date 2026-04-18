@@ -1,0 +1,199 @@
+/* ===== METAVISION UI - GREEN FORM WITH BLUE TEXT ===== */
+
+.root {
+    -fx-font-family: "Segoe UI", "Roboto", Arial, sans-serif;
+    -fx-font-size: 13px;
+    -fx-background-color: linear-gradient(to bottom, #e8f5e9 0%, #ffffff 100%); /* зелёный фон формы - ОСТАЁТСЯ */
+}
+
+/* ===== TYPOGRAPHY - СИНИЕ ШРИФТЫ ===== */
+.title {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1565c0; /* тёмно-синий вместо зелёного */
+}
+
+.header {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1976d2; /* синий акцент вместо зелёного */
+}
+
+.subheader {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2196f3; /* ярко-синий */
+}
+
+.caption {
+    -fx-font-size: 12px;
+    -fx-text-fill: #42a5f5; /* светло-синий вместо зелёного */
+}
+
+/* ===== LABELS - ВСЕ МЕТКИ СИНИЕ ===== */
+.label {
+    -fx-text-fill: #1976d2; /* синий для всех меток по умолчанию */
+}
+
+/* ===== BUTTONS - КНОПКИ ОСТАЮТСЯ ЦВЕТНЫМИ ===== */
+.btn-primary {
+    -fx-background-color: linear-gradient(to bottom, #1976d2 0%, #0d47a1 100%); /* синий акцент */
+    -fx-text-fill: white !important; /* белый текст на кнопках */
+}
+.btn-success {
+    -fx-background-color: linear-gradient(to bottom, #43a047 0%, #2e7d32 100%); /* зелёный */
+    -fx-text-fill: white !important;
+}
+.btn-warning {
+    -fx-background-color: linear-gradient(to bottom, #fb8c00 0%, #ef6c00 100%);
+    -fx-text-fill: white !important;
+}
+.btn-danger {
+    -fx-background-color: linear-gradient(to bottom, #e53935 0%, #b71c1c 100%);
+    -fx-text-fill: white !important;
+}
+.btn-info {
+    -fx-background-color: linear-gradient(to bottom, #26a69a 0%, #00897b 100%); /* бирюзовый */
+    -fx-text-fill: white !important;
+}
+.btn-secondary {
+    -fx-background-color: linear-gradient(to bottom, #66bb6a 0%, #388e3c 100%); /* зелёный */
+    -fx-text-fill: white !important;
+}
+
+/* ===== PANELS - ОСТАЮТСЯ ЗЕЛЁНЫМИ ===== */
+.card {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #81c784; /* зелёная рамка */
+    -fx-border-width: 1.5px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 15px;
+}
+
+.toolbar {
+    -fx-background-color: linear-gradient(to right, #e8f5e9 0%, #c8e6c9 100%); /* зелёный градиент */
+    -fx-border-color: #81c784;
+    -fx-border-width: 1.5px;
+    -fx-border-radius: 8px;
+}
+
+/* ===== TABLES - ТАБЛИЦЫ ОСТАЮТСЯ ===== */
+.table-view {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #81c784;
+    -fx-border-width: 1.5px;
+    -fx-border-radius: 6px;
+}
+
+.table-view .column-header {
+    -fx-background-color: #e8f5e9;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1565c0; /* СИНИЙ вместо зелёного в заголовках таблиц */
+    -fx-border-color: #81c784;
+}
+
+.table-row-cell:odd { -fx-background-color: #f1f8e9; }
+.table-row-cell:even { -fx-background-color: #ffffff; }
+.table-row-cell:selected {
+    -fx-background-color: #c8e6c9;
+    -fx-text-fill: #1565c0; /* СИНИЙ текст в выбранной строке */
+    -fx-font-weight: bold;
+}
+.table-row-cell:hover { -fx-background-color: #e8f5e9; }
+
+/* ===== INPUTS - ПОЛЯ ВВОДА ===== */
+.text-field, .text-area {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #81c784;
+    -fx-border-width: 1.5px;
+    -fx-border-radius: 6px;
+    -fx-text-fill: #1976d2; /* СИНИЙ текст в полях ввода */
+}
+
+.text-field:focused, .text-area:focused {
+    -fx-border-color: #2196f3; /* СИНИЙ при фокусе */
+    -fx-border-width: 2px;
+    -fx-effect: dropshadow(gaussian, rgba(33,150,243,0.25), 6, 0, 0, 0); /* синяя тень */
+}
+
+/* ===== TREE - ДЕРЕВО ===== */
+.tree-view {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #81c784;
+    -fx-border-width: 1.5px;
+    -fx-border-radius: 6px;
+}
+
+.tree-cell {
+    -fx-text-fill: #333333; /* ЧЁРНЫЙ текст  в дереве */
+}
+.tree-cell:hover { -fx-background-color: #e8f5e9; }
+.tree-cell:selected {
+    -fx-background-color: #c8e6c9;
+    -fx-text-fill: #000000; /* ЧЁРНЫЙ выбранный текст */
+    -fx-font-weight: bold;
+}
+
+/* ===== STATUS COLORS - СТАТУСНЫЕ ЦВЕТА ТЕКСТА ===== */
+.text-success { -fx-text-fill: #2e7d32; -fx-font-weight: bold; }
+.text-warning { -fx-text-fill: #ef6c00; -fx-font-weight: bold; }
+.text-danger  { -fx-text-fill: #c62828; -fx-font-weight: bold; }
+.text-info    { -fx-text-fill: #1976d2; -fx-font-weight: bold; }
+.text-accent  { -fx-text-fill: #2196f3; -fx-font-weight: bold; }
+
+/* 🔥 ВЫДЕЛЕННЫЕ ЯЧЕЙКИ ТАБЛИЦ - СИНИЙ ТЕКСТ */
+.table-view .table-row-cell:selected .table-cell .text {
+    -fx-fill: #1565c0 !important;
+}
+
+.table-view .table-row-cell:selected .table-cell {
+    -fx-text-fill: #1565c0 !important;
+}
+
+/* ===== COMBOBOX - ВЫПАДАЮЩИЕ СПИСКИ ===== */
+.combo-box {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #81c784;
+    -fx-border-width: 1.5px;
+    -fx-border-radius: 6px;
+}
+
+.combo-box .list-cell {
+    -fx-text-fill: #1976d2; /* СИНИЙ текст в ComboBox */
+}
+
+.combo-box .list-view .list-cell:hover {
+    -fx-background-color: #e8f5e9;
+    -fx-text-fill: #0d47a1;
+}
+
+.combo-box .list-view .list-cell:selected {
+    -fx-background-color: #c8e6c9;
+    -fx-text-fill: #0d47a1;
+}
+
+/* ===== РАЗДЕЛИТЕЛИ И ГРУППЫ ===== */
+.separator .line {
+    -fx-border-color: #81c784;
+    -fx-border-width: 0 0 1 0;
+}
+
+/* ===== СПЕЦИАЛЬНЫЕ МЕТКИ ДЛЯ ИНФОРМАЦИИ ===== */
+.info-label {
+    -fx-text-fill: #42a5f5;
+    -fx-font-size: 13px;
+    -fx-font-style: italic;
+}
+
+/* ===== ТЕКСТ В ПАНЕЛЯХ ===== */
+.panel .label {
+    -fx-text-fill: #1976d2; /* синий текст в панелях */
+}
+
+
+
+
+
+
+

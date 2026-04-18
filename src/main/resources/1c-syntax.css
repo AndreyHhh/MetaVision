@@ -1,0 +1,103 @@
+/* 1c-syntax.css - Стандартная цветовая схема 1С 8.3 */
+
+/* Ключевые слова - красный, жирный */
+.keyword {
+    -fx-fill: #FF0000;
+    -fx-font-weight: bold;
+}
+
+/* Строки - черный */
+.string {
+    -fx-fill: #000000;
+}
+
+/* Комментарии - зеленый */
+.line-comment {
+    -fx-fill: #008000;
+}
+
+.block-comment {
+    -fx-fill: #008000;
+}
+
+/* Литералы (константы типа Дата) - черный */
+/*.literal {
+    -fx-fill: #000000;
+}*/
+
+/* Литералы (константы) - красный, жирный */
+.literal {
+    -fx-fill: #FF0000;  /* ← СДЕЛАЙ КРАСНЫЙ */
+    -fx-font-weight: bold;
+}
+
+/* Числа - черный */
+.number {
+    -fx-fill: #000000;
+}
+
+/* Препроцессор - коричневый, жирный */
+.preprocessor {
+    -fx-fill: #963200;
+    -fx-font-weight: bold;
+}
+
+/* Строки запросов - черный */
+.query-string {
+    -fx-fill: #000000;
+}
+
+/* Идентификаторы - синий (названия функций, переменных, процедур и весь остальной код) */
+.identifier {
+    -fx-fill: #0000FF;
+}
+
+/* Операторы - красный, жирный */
+.operator {
+    -fx-fill: #FF0000;
+    -fx-font-weight: bold;
+}
+
+/* Прочее - черный */
+.default {
+    -fx-fill: #000000;
+}
+
+/* Фон - белый */
+.background {
+   -fx-fill: #FFFFFFFF;  /* белый фон */
+}
+
+.highlight {
+    -fx-fill: #00FF00; /* ярко-зелёный */
+    -fx-font-weight: bold;
+    -fx-underline: true;
+}
+
+
+/* Стиль для ошибок орфографии */
+.spelling-error {
+    -rtfx-underline-color: #ff4444;
+    -rtfx-underline-width: 1.5;
+    -rtfx-underline-dash-array: 3 3;
+    -fx-fill: #cc0000;
+    -rtfx-background-color: #fff0f0;
+}
+
+/* Стиль для ошибок орфографии - только волнистые красные линии */
+/* Стиль для ошибок орфографии - только волнистые красные линии, не трогаем цвет текста */
+.spelling-error {
+    -rtfx-underline-color: #ff0000;
+    -rtfx-underline-width: 1.5;
+    -rtfx-underline-dash-array: 2 2;
+    /* НЕ трогаем -fx-fill вообще! Пусть остается как было */
+}
+
+/* Если используешь CodeArea из RichTextFX */
+.code-area .spelling-error {
+    -rtfx-underline-color: red;
+    -rtfx-underline-width: 1.5;
+    -rtfx-underline-dash-array: 2 2;
+    /* НЕ трогаем -fx-fill вообще! */
+}
+

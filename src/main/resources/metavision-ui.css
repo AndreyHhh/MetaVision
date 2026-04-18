@@ -1,0 +1,303 @@
+/* ===== METAVISION UI - GREEN FORM WITH BLUE TEXT ===== */
+
+.root {
+    -fx-font-family: "Segoe UI", "Roboto", Arial, sans-serif;
+    -fx-font-size: 13px;
+    -fx-background-color: linear-gradient(to bottom, #e8f5e9 0%, #ffffff 100%);
+}
+
+/* ===== TYPOGRAPHY - СИНИЕ ШРИФТЫ ===== */
+.title {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1565c0;
+}
+
+.header {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1976d2;
+}
+
+.subheader {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2196f3;
+}
+
+.caption {
+    -fx-font-size: 12px;
+    -fx-text-fill: #42a5f5;
+}
+
+/* ===== LABELS - ВСЕ МЕТКИ СИНИЕ ===== */
+.label {
+    -fx-text-fill: #1976d2;
+}
+
+
+/* 🚨 БАЗОВЫЙ СТИЛЬ ДЛЯ ВСЕХ КНОПОК - ПЕРЕЗАПИСЫВАЕМ MODENA */
+/*
+.button {
+    -fx-background-insets: 0, 0, 0, 0;
+    -fx-background-radius: 12px;
+    -fx-padding: 12px 24px;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 20, 0.5, 0, 8);
+    -fx-border-width: 3px;
+    -fx-border-style: solid;
+}
+*/
+.button {
+
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 2, 0.5, 0, 1);
+    -fx-border-width: 0.1px;
+  // -fx-background-color: rgb(221,221,211); /* Красная кнопка */
+}
+
+
+/* ===== BUTTONS - КНОПКИ С ЛЁГКИМИ ТЕНЯМИ ===== */
+
+
+
+.button.btn-danger {
+    -fx-background-color: linear-gradient(to bottom, #e53935 0%, #b71c1c 100%);
+    -fx-text-fill: white;
+    -fx-background-radius: 6px;
+    -fx-padding: 8px 16px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 3, 0.4, 0, 2);
+}
+
+.button.btn-danger:hover {
+    -fx-background-color: linear-gradient(to bottom, #ef5350 0%, #e53935 100%);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 4, 0.5, 0, 3);
+}
+
+.button.btn-info {
+    -fx-background-color: linear-gradient(to bottom, #26a69a 0%, #00897b 100%);
+    -fx-text-fill: white;
+    -fx-background-radius: 6px;
+    -fx-padding: 8px 16px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 3, 0.4, 0, 2);
+}
+
+.button.btn-info:hover {
+    -fx-background-color: linear-gradient(to bottom, #4db6ac 0%, #26a69a 100%);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 4, 0.5, 0, 3);
+}
+
+.button.btn-secondary {
+    -fx-background-color: linear-gradient(to bottom, #66bb6a 0%, #388e3c 100%);
+    -fx-text-fill: white;
+    -fx-background-radius: 6px;
+    -fx-padding: 8px 16px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 3, 0.4, 0, 2);
+}
+
+.button.btn-secondary:hover {
+    -fx-background-color: linear-gradient(to bottom, #81c784 0%, #66bb6a 100%);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 4, 0.5, 0, 3);
+}
+
+/* Маленькие кнопки */
+.button.btn-xs {
+    -fx-padding: 4px 8px;
+    -fx-font-size: 11px;
+}
+
+.button.btn-sm {
+    -fx-padding: 6px 12px;
+    -fx-font-size: 12px;
+}
+
+/* Иконочные кнопки */
+.button.btn-icon {
+    -fx-padding: 6px 10px;
+    -fx-min-width: 35px;
+    -fx-pref-width: 35px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ===== PANELS - ОСТАЮТСЯ ЗЕЛЁНЫМИ ===== */
+.card {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #81c784;
+    -fx-border-width: 1.5px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 15px;
+}
+
+.toolbar {
+    -fx-background-color: linear-gradient(to right, #e8f5e9 0%, #c8e6c9 100%);
+    -fx-border-color: #81c784;
+    -fx-border-width: 1.5px;
+    -fx-border-radius: 8px;
+}
+
+/* ===== TABLES - ТАБЛИЦЫ ОСТАЮТСЯ ===== */
+.table-view {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #81c784;
+    -fx-border-width: 1.5px;
+    -fx-border-radius: 6px;
+}
+
+.table-view .column-header {
+    -fx-background-color: #e8f5e9;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1565c0;
+    -fx-border-color: #81c784;
+}
+
+.table-row-cell:odd { -fx-background-color: #f1f8e9; }
+.table-row-cell:even { -fx-background-color: #ffffff; }
+.table-row-cell:selected {
+    -fx-background-color: #c8e6c9;
+    -fx-text-fill: #1565c0;
+    -fx-font-weight: bold;
+}
+.table-row-cell:hover { -fx-background-color: #e8f5e9; }
+
+/* ===== INPUTS - ПОЛЯ ВВОДА ===== */
+.text-field, .text-area {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #81c784;
+    -fx-border-width: 1.5px;
+    -fx-border-radius: 6px;
+    -fx-text-fill: #1976d2;
+}
+
+.text-field:focused, .text-area:focused {
+    -fx-border-color: #2196f3;
+    -fx-border-width: 2px;
+    -fx-effect: dropshadow(gaussian, rgba(33,150,243,0.25), 6, 0, 0, 0);
+}
+
+/* ===== TREE - ДЕРЕВО ===== */
+.tree-view {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #81c784;
+    -fx-border-width: 1.5px;
+    -fx-border-radius: 6px;
+}
+
+.tree-cell {
+    -fx-text-fill: #333333;
+}
+.tree-cell:hover { -fx-background-color: #e8f5e9; }
+.tree-cell:selected {
+    -fx-background-color: #c8e6c9;
+    -fx-text-fill: #000000;
+    -fx-font-weight: bold;
+}
+
+/* ===== STATUS COLORS - СТАТУСНЫЕ ЦВЕТА ТЕКСТА ===== */
+.text-success { -fx-text-fill: #2e7d32; -fx-font-weight: bold; }
+.text-warning { -fx-text-fill: #ef6c00; -fx-font-weight: bold; }
+.text-danger  { -fx-text-fill: #c62828; -fx-font-weight: bold; }
+.text-info    { -fx-text-fill: #1976d2; -fx-font-weight: bold; }
+.text-accent  { -fx-text-fill: #2196f3; -fx-font-weight: bold; }
+
+/* 🔥 ВЫДЕЛЕННЫЕ ЯЧЕЙКИ ТАБЛИЦ - СИНИЙ ТЕКСТ */
+.table-view .table-row-cell:selected .table-cell .text {
+    -fx-fill: #1565c0 !important;
+}
+
+.table-view .table-row-cell:selected .table-cell {
+    -fx-text-fill: #1565c0 !important;
+}
+
+/* ===== COMBOBOX - ВЫПАДАЮЩИЕ СПИСКИ ===== */
+.combo-box {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #81c784;
+    -fx-border-width: 1.5px;
+    -fx-border-radius: 6px;
+}
+
+.combo-box .list-cell {
+    -fx-text-fill: #1976d2;
+}
+
+.combo-box .list-view .list-cell:hover {
+    -fx-background-color: #e8f5e9;
+    -fx-text-fill: #0d47a1;
+}
+
+.combo-box .list-view .list-cell:selected {
+    -fx-background-color: #c8e6c9;
+    -fx-text-fill: #0d47a1;
+}
+
+/* ===== РАЗДЕЛИТЕЛИ И ГРУППЫ ===== */
+.separator .line {
+    -fx-border-color: #81c784;
+    -fx-border-width: 0 0 1 0;
+}
+
+/* ===== СПЕЦИАЛЬНЫЕ МЕТКИ ДЛЯ ИНФОРМАЦИИ ===== */
+.info-label {
+    -fx-text-fill: #42a5f5;
+    -fx-font-size: 13px;
+    -fx-font-style: italic;
+}
+
+/* ===== ТЕКСТ В ПАНЕЛЯХ ===== */
+.panel .label {
+    -fx-text-fill: #1976d2;
+}
+
+
+/* Альтернативный вариант - более яркий */
+.highlight-line {
+    -fx-background-color: #ffeb3b;
+    -fx-fill: #910d1a;
+    -fx-font-weight: bold;
+     -fx-background-radius: 3;
+}
+/* Подсветка найденного текста */
+.search-match {
+    -fx-background-color: #ffeb3b;
+    -fx-fill: #000000;
+    -fx-font-weight: bold;
+    -fx-background-radius: 3;
+}
+
+
+
+/* Подсветка поиска в CodeArea */
+.search-highlight {
+    -rtfx-background-color: #b3e5fc; /* мягкий голубой */
+}
+
+
+
+/* Пунктир — похоже на волну */
+.search-highlight-current {
+    -rtfx-background-color: rgba(229, 57, 53, 0.15);
+    -fx-border-color: transparent transparent #e53935 transparent;
+    -fx-border-style: none none dotted none;
+    -fx-border-width: 0 0 2 0;
+}
