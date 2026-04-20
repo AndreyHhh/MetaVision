@@ -5,6 +5,18 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Windows](https://img.shields.io/badge/Platform-Windows%20x64-blue.svg)]()
 
+<p align="center">
+  <a href="https://infostart.ru/" target="_blank">
+    <img src="https://infostart.ru/bitrix/templates/sandbox_empty/assets/tpl/abo/img/logo.svg" width="150" alt="Инфостарт">
+  </a>
+</p>
+
+<p align="center">
+  🔗 <strong>Официальная публикация на Инфостарте:</strong><br>
+  <a href="https://infostart.ru/1c/tools/2664662/" target="_blank">https://infostart.ru/1c/tools/2664662/</a><br>
+  <em>Скачивание, обсуждение и новости — только там</em>
+</p>
+
 ---
 
 ## 📋 О ПРОГРАММЕ
@@ -71,7 +83,7 @@ MetaVision for 1C — это профессиональный инструмен
 ## 📥 СКАЧАТЬ
 
 Скачать готовую программу можно двумя способами:
-- **[Скачать с Инфостарт](https://infostart.ru/)** — готовая сборка `.exe` (ссылка появится после публикации)
+- **[Скачать с Инфостарт](https://infostart.ru/1c/tools/2664662/)** — ссылка на публикацию
 - **[Скачать с GitHub](https://github.com/AndreyHhh/MetaVision/releases)** — последний релиз
 
 ---
